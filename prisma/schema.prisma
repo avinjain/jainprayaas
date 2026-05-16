@@ -1,12 +1,9 @@
-// Local dev: SQLite (no Docker). For production PostgreSQL, switch `provider`
-// to `postgresql`, restore `@db.Uuid` on id fields if needed, and run Postgres migrations.
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
