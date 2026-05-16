@@ -1,65 +1,185 @@
+import { getPublicSiteDisplay } from "@/lib/public-site";
+import { SubmitBiodataForm } from "@/components/SubmitBiodataForm";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+const FEATURES = [
+  {
+    icon: "🔒",
+    title: "Secure & Private",
+    desc: "Your biodata is seen only by our trusted community coordinators.",
+  },
+  {
+    icon: "⚡",
+    title: "Quick Setup",
+    desc: "Fill one simple form and upload your biodata in under 5 minutes.",
+  },
+  {
+    icon: "🤝",
+    title: "Community Verified",
+    desc: "Every profile is reviewed and payment-verified before listing.",
+  },
+];
+
+export default async function HomePage() {
+  const cfg = await getPublicSiteDisplay();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-full">
+      {/* ─── HERO ──────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-red-950 via-red-900 to-amber-900 pb-32 pt-16 text-white">
+        {/* subtle dot pattern */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+        <div className="relative mx-auto max-w-4xl px-5 text-center">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-red-700/40 bg-red-800/40 px-4 py-1.5 text-sm font-medium text-red-200 backdrop-blur-sm">
+            <span className="h-2 w-2 rounded-full bg-amber-400" />
+            Jain Community Matrimony
+          </div>
+          <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            Find Your{" "}
+            <span className="relative">
+              <span className="relative z-10 text-amber-300">Life Partner</span>
+              <span className="absolute -bottom-1 left-0 right-0 h-1 rounded-full bg-amber-500/50" />
+            </span>
+            <br className="hidden sm:block" /> within the Community
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-red-200 sm:text-lg">
+            {cfg.communityName} is a trusted matrimony platform for the Jain
+            community. Submit your biodata and let us help you find a compatible
+            match.
+          </p>
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href="#apply"
+              className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3.5 text-base font-semibold text-white shadow-lg transition hover:bg-amber-400 active:scale-95"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              Register Now
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </Link>
+            <span className="text-sm text-red-300">
+              Registration fee ₹{Number.isFinite(cfg.feeInr) ? cfg.feeInr : 501}
+            </span>
+          </div>
+        </div>
+
+        {/* floating card teaser */}
+        <div className="relative mx-auto mt-10 max-w-sm px-5">
+          <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-400 text-xl">
+                🕊️
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  Simple 3-Step Process
+                </p>
+                <p className="text-xs text-red-200">
+                  Fill details → Upload biodata → Pay
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-2">
+              {["1. Details", "2. Biodata", "3. Payment"].map((s, i) => (
+                <div
+                  key={s}
+                  className={`flex-1 rounded-lg py-2 text-center text-xs font-medium ${
+                    i === 0
+                      ? "bg-amber-400 text-amber-900"
+                      : "bg-white/10 text-white/70"
+                  }`}
+                >
+                  {s}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* wave bottom */}
+        <div className="absolute -bottom-px left-0 right-0">
+          <svg viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0 32C240 64 480 0 720 32C960 64 1200 0 1440 32V64H0V32Z"
+              fill="white"
+            />
+          </svg>
+        </div>
+      </section>
+
+      {/* ─── FEATURES ─────────────────────────────────────────── */}
+      <section className="bg-white py-14">
+        <div className="mx-auto max-w-4xl px-5">
+          <div className="grid gap-6 sm:grid-cols-3">
+            {FEATURES.map((f) => (
+              <div
+                key={f.title}
+                className="flex flex-col items-start gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-5"
+              >
+                <span className="text-3xl">{f.icon}</span>
+                <div>
+                  <p className="font-semibold text-slate-900">{f.title}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-500">
+                    {f.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── REGISTRATION FORM ───────────────────────────────── */}
+      <section className="bg-slate-50 py-8 pb-20">
+        <div className="mx-auto max-w-2xl px-4">
+          <div className="mb-8 text-center">
+            <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-amber-800">
+              Apply Now
+            </span>
+            <h2 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">
+              Submit Your Biodata
+            </h2>
+            <p className="mt-2 text-slate-500">
+              Complete the form below to register your profile with{" "}
+              {cfg.communityName}.
+            </p>
+          </div>
+          <SubmitBiodataForm {...cfg} />
+        </div>
+      </section>
+
+      {/* ─── FOOTER ──────────────────────────────────────────── */}
+      <footer className="border-t border-slate-100 bg-white py-8">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-3 px-5 text-center">
+          <Image
+            src="/prayaas-logo.png"
+            alt="Prayaas"
+            width={160}
+            height={64}
+            className="h-16 w-auto object-contain"
+          />
+          <p className="text-xs text-slate-400">
+            A community matrimony initiative for the Jain community.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
   );
 }

@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: matrimony
+      POSTGRES_PASSWORD: matrimony
+      POSTGRES_DB: matrimony
+    ports:
+      - "5433:5432"
+    volumes:
+      - matrimony_pg:/var/lib/postgresql/data
+
+volumes:
+  matrimony_pg:
