@@ -114,10 +114,11 @@ function QrUploadZone({
 export default function AdminSiteSettingsPage() {
   const [upiId, setUpiId] = useState("");
   const [fee, setFee] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
   const [hasPaymentQr, setHasPaymentQr] = useState(false);
-  const [hasWhatsappQr, setHasWhatsappQr] = useState(false);
+  const [hasContactQr, setHasContactQr] = useState(false);
   const [paymentFile, setPaymentFile] = useState<File | null>(null);
-  const [whatsappFile, setWhatsappFile] = useState<File | null>(null);
+  const [contactFile, setContactFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -133,8 +134,9 @@ export default function AdminSiteSettingsPage() {
         if (!cancelled) {
           setUpiId(typeof data.upiId === "string" ? data.upiId : "");
           setFee(typeof data.registrationFeeInr === "string" ? data.registrationFeeInr : "");
+          setContactPhone(typeof data.contactPhone === "string" ? data.contactPhone : "");
           setHasPaymentQr(Boolean(data.hasPaymentQr));
-          setHasWhatsappQr(Boolean(data.hasWhatsappQr));
+          setHasContactQr(Boolean(data.hasWhatsappQr));
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -153,8 +155,9 @@ export default function AdminSiteSettingsPage() {
       const fd = new FormData();
       fd.set("upiId", upiId);
       fd.set("registrationFeeInr", fee);
+      fd.set("contactPhone", contactPhone);
       if (paymentFile) fd.set("paymentQr", paymentFile);
-      if (whatsappFile) fd.set("whatsappQr", whatsappFile);
+      if (contactFile) fd.set("whatsappQr", contactFile);
 
       const res = await fetch("/api/admin/site-settings", { method: "POST", body: fd });
       const data = await res.json().catch(() => ({}));
@@ -167,7 +170,7 @@ export default function AdminSiteSettingsPage() {
       }
 
       setPaymentFile(null);
-      setWhatsappFile(null);
+      setContactFile(null);
       setMessage({ type: "success", text: "Settings saved. Changes are now live on the public page." });
 
       const res2 = await fetch("/api/admin/site-settings");
@@ -175,8 +178,9 @@ export default function AdminSiteSettingsPage() {
         const d = await res2.json();
         setUpiId(typeof d.upiId === "string" ? d.upiId : "");
         setFee(typeof d.registrationFeeInr === "string" ? d.registrationFeeInr : "");
+        setContactPhone(typeof d.contactPhone === "string" ? d.contactPhone : "");
         setHasPaymentQr(Boolean(d.hasPaymentQr));
-        setHasWhatsappQr(Boolean(d.hasWhatsappQr));
+        setHasContactQr(Boolean(d.hasWhatsappQr));
       }
     } catch {
       setMessage({ type: "error", text: "Network error. Please try again." });
@@ -263,6 +267,36 @@ export default function AdminSiteSettingsPage() {
           </div>
         </div>
 
+        {/* ── CONTACT DETAILS ─────────────────────────── */}
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-100 bg-slate-50 px-5 py-4">
+            <p className="font-semibold text-slate-900">Community Contact</p>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Shown to applicants on the success page so they can save the
+              number and send biodata in future.
+            </p>
+          </div>
+          <div className="p-5">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="contactPhone" className="text-sm font-medium text-slate-700">
+                WhatsApp Contact Number
+              </label>
+              <input
+                id="contactPhone"
+                type="tel"
+                inputMode="tel"
+                className="rounded-xl border border-slate-300 px-4 py-3 text-base text-slate-900 transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200"
+                value={contactPhone}
+                onChange={(e) => setContactPhone(e.target.value)}
+                placeholder="+919876543210"
+              />
+              <p className="text-xs text-slate-400">
+                Include country code (e.g. <code className="rounded bg-slate-100 px-1">+91…</code>). Used to build a WhatsApp link on the success screen.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* ── QR CODES ──────────────────────────────── */}
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 bg-slate-50 px-5 py-4">
@@ -277,7 +311,7 @@ export default function AdminSiteSettingsPage() {
               <QrUploadZone
                 id="paymentQr"
                 label="UPI Payment QR"
-                description="Shown on the registration form so applicants can scan and pay."
+                description="Shown on the success page so applicants can scan and pay."
                 currentSrc={hasPaymentQr ? "/api/public/qr/payment" : undefined}
                 currentAlt="Current payment QR"
                 file={paymentFile}
@@ -286,13 +320,13 @@ export default function AdminSiteSettingsPage() {
             </div>
             <div className="p-5">
               <QrUploadZone
-                id="whatsappQr"
-                label="WhatsApp Group QR"
-                description="Shown on the success screen after submission so applicants can join your group."
-                currentSrc={hasWhatsappQr ? "/api/public/qr/whatsapp" : undefined}
-                currentAlt="Current WhatsApp QR"
-                file={whatsappFile}
-                onChange={setWhatsappFile}
+                id="contactQr"
+                label="Contact QR Code"
+                description="Shown on the success page — scanning this saves the community contact (or opens WhatsApp). Generate it from your contact number using any free QR generator."
+                currentSrc={hasContactQr ? "/api/public/qr/whatsapp" : undefined}
+                currentAlt="Current contact QR"
+                file={contactFile}
+                onChange={setContactFile}
               />
             </div>
           </div>

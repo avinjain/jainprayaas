@@ -11,7 +11,7 @@ type SubmissionRow = {
   age: number;
   mobileNumber: string;
   biodataFileKey: string;
-  paymentScreenshotKey: string;
+  paymentScreenshotKey: string | null;
   paymentStatus: string;
   createdAt: string;
 };
@@ -323,7 +323,7 @@ export default function AdminDashboardPage() {
                     "Name",
                     "Gender",
                     "Age",
-                    "Mobile",
+                    "WhatsApp",
                     "Submitted",
                     "Biodata",
                     "Payment Proof",
@@ -420,17 +420,23 @@ export default function AdminDashboardPage() {
                         </Link>
                       </td>
                       <td className="px-4 py-3">
-                        <Link
-                          href={fileUrl(r.paymentScreenshotKey)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900"
-                        >
-                          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          Screenshot
-                        </Link>
+                        {r.paymentScreenshotKey ? (
+                          <Link
+                            href={fileUrl(r.paymentScreenshotKey)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900"
+                          >
+                            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Screenshot
+                          </Link>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-400">
+                            Verify by ID
+                          </span>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         <StatusBadge status={r.paymentStatus} />

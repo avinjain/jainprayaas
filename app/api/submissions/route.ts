@@ -10,17 +10,10 @@ export async function POST(request: Request) {
     const formData = await request.formData();
 
     const biodata = formData.get("biodata");
-    const paymentScreenshot = formData.get("paymentScreenshot");
 
     if (!(biodata instanceof File) || biodata.size === 0) {
       return NextResponse.json(
         { error: "Biodata file is required" },
-        { status: 400 },
-      );
-    }
-    if (!(paymentScreenshot instanceof File) || paymentScreenshot.size === 0) {
-      return NextResponse.json(
-        { error: "Payment screenshot is required" },
         { status: 400 },
       );
     }
@@ -39,12 +32,9 @@ export async function POST(request: Request) {
     }
 
     let biodataKey: string;
-    let paymentKey: string;
     try {
       const b = await saveUploadedFile("biodata", biodata);
       biodataKey = b.key;
-      const p = await saveUploadedFile("payment", paymentScreenshot);
-      paymentKey = p.key;
     } catch (e) {
       const message =
         e instanceof Error ? e.message : "File upload failed";
@@ -57,7 +47,7 @@ export async function POST(request: Request) {
       age: parsed.data.age,
       mobileNumber: parsed.data.mobileNumber,
       biodataFileKey: biodataKey,
-      paymentScreenshotKey: paymentKey,
+      paymentScreenshotKey: null,
       paymentStatus: "Pending" as const,
     };
 
@@ -91,7 +81,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       submissionCode: row.submissionCode,
-      message: "Thank you. Your biodata has been submitted.",
+      message:
+        "Biodata received. Use the ID below as the payment reference, then save our contact for further communication.",
     });
   } catch (err) {
     console.error(err);

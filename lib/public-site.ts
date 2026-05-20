@@ -7,7 +7,10 @@ export type PublicSiteDisplay = {
   feeInr: number;
   /** Payment UPI QR — static path or `/api/public/qr/payment` */
   qrSrc: string;
-  whatsappQrSrc: string | null;
+  /** Contact QR (admin uploaded) used to save the community contact / open WhatsApp */
+  contactQrSrc: string | null;
+  /** Contact phone applicants should save to send biodata in future */
+  contactPhone: string | null;
 };
 
 export async function getPublicSiteDisplay(): Promise<PublicSiteDisplay> {
@@ -17,14 +20,16 @@ export async function getPublicSiteDisplay(): Promise<PublicSiteDisplay> {
   const upiId = row?.upiId?.trim() ? row.upiId.trim() : env.upiId;
   const feeInr =
     row?.registrationFeeInr != null ? row.registrationFeeInr : env.feeInr;
+  const contactPhone = row?.contactPhone?.trim() || null;
 
   return {
     communityName: env.communityName,
     upiId,
     feeInr: Number.isFinite(feeInr) ? feeInr : 501,
     qrSrc: row?.paymentQrFileKey ? "/api/public/qr/payment" : env.qrSrc,
-    whatsappQrSrc: row?.whatsappQrFileKey
+    contactQrSrc: row?.whatsappQrFileKey
       ? "/api/public/qr/whatsapp"
       : null,
+    contactPhone,
   };
 }

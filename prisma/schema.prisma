@@ -15,7 +15,7 @@ model Submission {
   age                  Int
   mobileNumber         String   @map("mobile_number")
   biodataFileKey       String   @map("biodata_file_key")
-  paymentScreenshotKey String   @map("payment_screenshot_key")
+  paymentScreenshotKey String?  @map("payment_screenshot_key")
   paymentStatus        String   @default("Pending") @map("payment_status")
   createdAt            DateTime @default(now()) @map("created_at")
 
@@ -32,6 +32,7 @@ model SiteSettings {
   whatsappQrFileKey  String?  @map("whatsapp_qr_file_key")
   upiId              String?
   registrationFeeInr Int?     @map("registration_fee_inr")
+  contactPhone       String?  @map("contact_phone")
   updatedAt          DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")

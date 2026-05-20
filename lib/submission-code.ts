@@ -3,9 +3,9 @@ import { randomBytes } from "node:crypto";
 /** Human-friendly charset: no 0/O, 1/I/L to reduce confusion. */
 const CHARSET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
 
-const PREFIX = "JM";
+const PREFIX = "JP";
 
-/** e.g. JM-A3K9P2 (short, easy to read over phone) */
+/** e.g. JP-A3K9P2 (short, easy to read over phone) */
 export function generateSubmissionCode(): string {
   const buf = randomBytes(6);
   let suffix = "";

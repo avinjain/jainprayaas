@@ -28,6 +28,7 @@ export async function GET() {
     upiId: row.upiId ?? "",
     registrationFeeInr:
       row.registrationFeeInr != null ? String(row.registrationFeeInr) : "",
+    contactPhone: row.contactPhone ?? "",
     hasPaymentQr: Boolean(row.paymentQrFileKey),
     hasWhatsappQr: Boolean(row.whatsappQrFileKey),
   });
@@ -104,6 +105,21 @@ export async function POST(request: Request) {
         );
       }
       data.registrationFeeInr = n;
+    }
+  }
+
+  const contactPhone = formData.get("contactPhone");
+  if (typeof contactPhone === "string") {
+    const t = contactPhone.replace(/\s+/g, "").trim();
+    if (t.length === 0) {
+      data.contactPhone = null;
+    } else if (!/^\+?[0-9]{8,15}$/.test(t)) {
+      return NextResponse.json(
+        { error: "Contact phone must be 8–15 digits (optionally starting with +)" },
+        { status: 400 },
+      );
+    } else {
+      data.contactPhone = t;
     }
   }
 
